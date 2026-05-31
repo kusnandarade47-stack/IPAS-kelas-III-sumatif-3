@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Media Pembelajaran: Tradisi Indonesia</title>
+    <style>
+        /* === VARIABEL & RESET === */
+        :root {
+            --navy: #0A2463;
+            --blue-light: #3E92CC;
+            --yellow: #FFC857;
+            --pink-hero: #FF99C8;
+            --bg-color: #F4F7F6;
+            --white: #FFFFFF;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --success: #4CAF50;
+            --danger: #F44336;
+            --shadow: 0 8px 16px rgba(0,0,0,0.1);
+            --radius: 16px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* === TYPOGRAPHY === */
+        h1, h2, h3 { color: var(--navy); margin-bottom: 15px; }
+        p { margin-bottom: 15px; font-size: 1.1rem; }
+        
+        /* === NAVBAR === */
+        header {
+            background-color: var(--navy);
+            color: var(--white);
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--shadow);
+        }
+
+        .logo { font-size: 1.5rem; font-weight: bold; color: var(--yellow); }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        nav a {
+            color: var(--white);
+            text-decoration: none;
+            font-weight: bold;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        nav a:hover, nav a.active {
+            background-color: var(--blue-light);
+            color: var(--white);
+        }
+
+        .top-controls {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            fill: var(--yellow);
+            width: 32px;
+            height: 32px;
+            transition: transform 0.2s;
+        }
+
+        .icon-btn:hover { transform: scale(1.1); }
+        .hamburger { display: none; background: none; border: none; fill: var(--white); width: 32px; height: 32px; cursor: pointer; }
+
+        /* === LAYOUT UTAMA === */
+        main {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .section.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card {
+            background-color: var(--white);
+            border-radius: var(--radius);
+            padding: 25px;
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+        }
+
+        /* === BERANDA === */
+        .hero {
+            background-color: var(--pink-hero);
+            color: var(--navy);
+            padding: 40px;
+            border-radius: var(--radius);
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-primary {
+            background-color: var(--blue-light);
+            color: var(--white);
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+        .btn-primary:hover { background-color: var(--navy); transform: translateY(-2px); }
+
+        .progress-container { margin: 20px 0; }
+        .progress-bar-bg { background-color: #ddd; border-radius: 20px; height: 25px; width: 100%; overflow: hidden; }
+        .progress-bar-fill { background-color: var(--success); height: 100%; width: 0%; transition: width 0.5s; }
+
+        .badges { display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
+        .badge { background-color: var(--yellow); color: var(--navy); padding: 10px 20px; border-radius: 20px; font-weight: bold; box-shadow: var(--shadow); display: flex; align-items: center; gap: 10px; }
+
+        .thumb-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;}
+        .thumb-card { background: var(--white); padding: 15px; border-radius: var(--radius); text-align: center; box-shadow: var(--shadow); border-bottom: 5px solid var(--blue-light);}
+
+        /* === MATERI & INTERAKTIF === */
+        .materi-content { background: var(--white); padding: 30px; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom:20px; }
+        .btn-audio { background-color: var(--yellow); border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: bold; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 15px; color: var(--navy); box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        
+        .flashcard-container { perspective: 1000px; width: 100%; max-width: 400px; height: 250px; margin: 20px auto; }
+        .flashcard { width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; cursor: pointer; position: relative; }
+        .flashcard.is-flipped { transform: rotateY(180deg); }
+        .flashcard-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; flex-direction: column; padding: 20px; border-radius: var(--radius); box-shadow: var(--shadow); text-align: center;}
+        .flashcard-front { background-color: var(--navy); color: var(--white); }
+        .flashcard-back { background-color: var(--yellow); color: var(--navy); transform: rotateY(180deg); }
+        .flashcard-controls { display: flex; justify-content: center; gap: 15px; margin-top: 15px; }
+
+        /* Mini Game Simulation */
+        .sim-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-around; margin-top: 20px; background: #e3f2fd; padding: 20px; border-radius: var(--radius); }
+        .sim-items, .sim-targets { display: flex; flex-direction: column; gap: 10px; flex: 1; min-width: 200px;}
+        .sim-item { background: var(--blue-light); color: white; padding: 15px; border-radius: 8px; cursor: pointer; text-align: center; font-weight: bold; border: 3px solid transparent; transition: 0.2s;}
+        .sim-item.selected { border-color: var(--yellow); transform: scale(1.05); }
+        .sim-target { background: white; border: 3px dashed var(--navy); padding: 15px; border-radius: 8px; text-align: center; font-weight: bold; cursor: pointer; min-height: 60px; display: flex; align-items: center; justify-content: center;}
+        .sim-target.matched { background: var(--success); color: white; border-style: solid; border-color: var(--success); cursor: default; }
+
+        /* === CONTOH SOAL === */
+        .contoh-card { border-left: 5px solid var(--blue-light); margin-bottom: 20px; background: #f9f9f9; }
+        .pembahasan { background: #e8f5e9; padding: 15px; border-radius: 8px; margin-top: 10px; border-left: 5px solid var(--success); }
+
+        /* === KUIS === */
+        .quiz-setup { text-align: center; }
+        .quiz-setup input { padding: 12px; font-size: 1.1rem; border-radius: 8px; border: 2px solid var(--blue-light); margin-bottom: 15px; width: 100%; max-width: 300px;}
+        
+        .question-box { font-size: 1.3rem; margin-bottom: 20px; font-weight: bold; }
+        .options { display: flex; flex-direction: column; gap: 10px; }
+        .option-btn { background-color: var(--white); border: 2px solid var(--blue-light); padding: 15px; border-radius: 8px; font-size: 1.1rem; cursor: pointer; text-align: left; transition: 0.2s; color: var(--navy); font-weight: bold;}
+        .option-btn:hover { background-color: #e3f2fd; }
+        .option-btn.correct { background-color: var(--success); color: white; border-color: var(--success); }
+        .option-btn.wrong { background-color: var(--danger); color: white; border-color: var(--danger); }
+
+        .quiz-footer { margin-top: 20px; display: flex; justify-content: space-between; align-items: center;}
+        .btn-next { display: none; background-color: var(--navy); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 1.1rem; cursor: pointer;}
+
+        /* === SERTIFIKAT & GRAFIK === */
+        .sertifikat-box { border: 10px solid var(--navy); padding: 40px; text-align: center; border-radius: 20px; background-color: var(--white); background-image: radial-gradient(#f0f0f0 10%, transparent 10%); background-size: 20px 20px; margin-bottom: 30px;}
+        .sertifikat-title { font-size: 2.5rem; color: var(--yellow); text-shadow: 2px 2px 0 var(--navy); margin-bottom: 10px; }
+        canvas { max-width: 100%; background: var(--white); border: 1px solid #ccc; border-radius: 8px; box-shadow: var(--shadow);}
+
+        /* === PENGEMBANG === */
+        .dev-grid { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; }
+        .dev-card { background: var(--white); padding: 20px; border-radius: var(--radius); text-align: center; box-shadow: var(--shadow); width: 250px; border-bottom: 5px solid var(--yellow);}
+        
+        footer { text-align: center; padding: 20px; background: var(--navy); color: white; margin-top: 40px;}
+
+        /* === RESPONSIVE === */
+        @media (max-width: 768px) {
+            header { flex-wrap: wrap; }
+            .hamburger { display: block; }
+            nav { width: 100%; display: none; margin-top: 15px; }
+            nav.open { display: block; }
+            nav ul { flex-direction: column; gap: 10px; }
+            nav a { display: block; text-align: center; }
+            .btn-primary { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAVBAR -->
+    <header>
+        <div class="logo">Belajar Tradisi 🇮🇩</div>
+        <button class="hamburger" id="btnMenu" aria-label="Menu">
+            <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+        </button>
+        <nav id="navMenu">
+            <ul>
+                <li><a onclick="navigate('beranda')" class="active" id="link-beranda">Beranda</a></li>
+                <li><a onclick="navigate('materi')" id="link-materi">Materi</a></li>
+                <li><a onclick="navigate('contoh')" id="link-contoh">Contoh Soal</a></li>
+                <li><a onclick="navigate('kuis')" id="link-kuis">Kuis</a></li>
+                <li><a onclick="navigate('sertifikat')" id="link-sertifikat">Sertifikat & Grafik</a></li>
+                <li><a onclick="navigate('pengembang')" id="link-pengembang">Pengembang</a></li>
+            </ul>
+        </nav>
+        <div class="top-controls">
+            <button class="icon-btn" id="btnAudio" aria-label="Toggle Audio" onclick="toggleAudio()">
+                <svg id="icon-sound-off" viewBox="0 0 24 24"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+                <svg id="icon-sound-on" viewBox="0 0 24 24" style="display:none;"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+            </button>
+            <button class="icon-btn" id="btnFullscreen" aria-label="Fullscreen" onclick="toggleFullScreen()">
+                <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <!-- 1. BERANDA -->
+        <section id="beranda" class="section active">
+            <div class="hero">
+                <h1 style="font-size: 2.5rem; color: var(--navy);">Halo Sahabat Pintar! 👋</h1>
+                <p style="font-size: 1.2rem;">Mari mengenal kekayaan budaya dan Tradisi Indonesia yang luar biasa.</p>
+                <button class="btn-primary" onclick="navigate('materi'); playSound('click');">🚀 Mulai Belajar</button>
+            </div>
+
+            <div class="card dashboard">
+                <h2>📊 Dashboard Kemajuanmu</h2>
+                <div class="progress-container">
+                    <p>Progress Membaca Materi: <span id="progress-text">0%</span></p>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="progress-bar"></div>
+                    </div>
+                </div>
+                
+                <h3>🏅 Pencapaian:</h3>
+                <div class="badges" id="badge-container">
+                    <div class="badge" id="badge-pemula" style="opacity: 0.5;">🌱 Penjelajah Pemula</div>
+                    <div class="badge" id="badge-ahli" style="opacity: 0.5;">⭐ Ahli Tradisi</div>
+                    <div class="badge" id="badge-kuis" style="opacity: 0.5;">🏆 Juara Kuis</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Cek Keberagaman Kita</h2>
+                <div class="thumb-grid">
+                    <div class="thumb-card">
+                        <h3>Tradisi Pasola</h3>
+                        <p>Dari Sumba</p>
+                    </div>
+                    <div class="thumb-card">
+                        <h3>Upacara Ngaben</h3>
+                        <p>Dari Bali</p>
+                    </div>
+                    <div class="thumb-card">
+                        <h3>Bakar Batu</h3>
+                        <p>Dari Papua</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. MATERI -->
+        <section id="materi" class="section">
+            <div class="materi-content" id="materi-part1">
+                <h2>A. Tradisi Keluarga dan Masyarakat Sekitar</h2>
+                <button class="btn-audio" onclick="bacaTeks('materi-text-1')">🔊 Dengarkan Materi</button>
+                <div id="materi-text-1">
+                    <p>Tradisi atau budaya adalah kebiasaan atau adat istiadat yang dijalankan dalam masyarakat. Kebiasaan ini merupakan turun-temurun dari nenek moyangnya. Adat istiadat adalah bagian berasal kekayaan budaya suatu wilayah atau bangsa.</p>
+                    <p>Contoh adat istiadat adalah upacara pernikahan adat Jawa, upacara potong gigi di Bali atau tradisi bau nyale di Lombok, ngaben, galungan, dan kuningan yang dilakukan masyarakat Bali.</p>
+                    <p>Tradisi seren taun banyak dijumpai di daerah Kuningan dan Sukabumi. Tradisi seren taun adalah sebuah upacara mengangkut padi dari sawah ke lumbung dengan memakai rengkong (pikulan khas yang terbuat dari bambu). Upacara ini merupakan bentuk rasa syukur masyarakat Sunda atas hasil tani.</p>
+                    
+                    <h3>1. Jenis-Jenis Tradisi</h3>
+                    <ul style="margin-left: 20px;">
+                        <li><b>Tradisi agama:</b> praktik keagamaan, ritual.</li>
+                        <li><b>Tradisi budaya:</b> ekspresi seni, bahasa, musik, tarian.</li>
+                        <li><b>Tradisi sosial:</b> etika makan, tata tertib upacara.</li>
+                        <li><b>Tradisi keluarga:</b> perayaan ulang tahun, liburan.</li>
+                    </ul>
+                    <br>
+                    <h3>2. Pengelompokan Tradisi</h3>
+                    <p><b>Tradisi Tak Tertulis:</b> Disampaikan lisan, beragam, fleksibel, rentan berubah.<br>
+                    <b>Tradisi Tertulis:</b> Terdokumentasi, sumber jelas, aturan tegas, konsisten.</p>
+                    <br>
+                    <h3>3. Contoh Tradisi Sekitar Kita</h3>
+                    <p><b>Suku Bangsa:</b> Ada sekitar 1.340 suku bangsa. Suku Batak (Sumut), Jawa (Jateng/Jatim), Betawi (Jakarta), Dayak (Kalimantan).</p>
+                    <p><b>Pakaian Adat:</b> Teluk Belanga (Kepri), Baju Pangsi (Banten), Pesa’an (Jatim), Baju Cele (Maluku), Baju Bodo (Sulsel).</p>
+                    <p><b>Makanan Khas:</b> Pendap (Bengkulu), Mi Bangka, Sate Bandeng (Banten), Karedok (Jabar), Ayam Betutu (Bali).</p>
+                    <p><b>Kesenian & Bahasa:</b> Angklung (Jabar), Lagu Ratu Anom (Bali), Tari Gambyong (Jateng), Kerambit (Bengkulu). Bahasa menyesuaikan suku (Jawa, Sunda, Betawi).</p>
+                </div>
+            </div>
+
+            <div class="materi-content" id="materi-part2">
+                <h2>B. Sejarah Tradisi atau Budaya di Indonesia</h2>
+                <button class="btn-audio" onclick="bacaTeks('materi-text-2')">🔊 Dengarkan Materi</button>
+                <div id="materi-text-2">
+                    <p>Masyarakat memiliki tradisi yang terkait dengan karakter suatu daerah:</p>
+                    <ul style="margin-left: 20px;">
+                        <li><b>Tradisi Pasola (Sumba):</b> Permainan melempar lembing kayu dari atas punggung kuda (Agama Marapu). Dilakukan di Kodi, Lamboya, Wanokaka, Gaura (Feb-Mar).</li>
+                        <li><b>Tradisi Kebo-Keboan (Banyuwangi):</b> Upacara adat suku Osing di Alas Malang untuk menghalau wabah. Laki-laki berdandan seperti kerbau membajak sawah.</li>
+                        <li><b>Tradisi Bakar Batu (Papua):</b> Ritual memasak bersama di Pegunungan Tengah, Jayawijaya. Simbol syukur dan perdamaian menggunakan batu panas.</li>
+                        <li><b>Rambu Solo & Mapasilaga Tedong (Toraja):</b> Rambu Solo adalah upacara kematian (makam di tebing Londa, ada boneka kayu). Mapasilaga Tedong adalah adu kerbau (pemotongan disebut Ma’tinggoro Tedong).</li>
+                    </ul>
+                </div>
+                
+                <h3 style="margin-top:20px;">C. Nilai-Nilai Tradisi</h3>
+                <p><b>1. Tradisi Marsialapari:</b> Budaya Mandailing (Sumut) saling tolong menolong menanam padi (marsuaneme) dan memanen padi (manyabi).</p>
+                <p><b>2. Tradisi Sekaten:</b> Di Yogyakarta dan Surakarta untuk memperingati Maulid Nabi Muhammad Saw (sejarah Wali Sanga). Punya nilai sosial dan ekonomi.</p>
+                <p><b>3. Tradisi Melasti:</b> Upacara umat Hindu Bali menyucikan diri di sumber air menjelang hari raya Nyepi.</p>
+            </div>
+
+            <div class="card">
+                <h2>Flashcard Interaktif</h2>
+                <p>Klik kartu untuk membalik dan melihat asal tradisi!</p>
+                <div class="flashcard-container">
+                    <div class="flashcard" id="flashcard" onclick="flipCard()">
+                        <div class="flashcard-face flashcard-front">
+                            <h2 style="color:white; font-size: 2rem;" id="fc-front">Tradisi Pasola</h2>
+                        </div>
+                        <div class="flashcard-face flashcard-back">
+                            <h2 style="font-size: 2rem;" id="fc-back">Sumba</h2>
+                            <p style="font-weight:bold;">(Melempar lembing dari kuda)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flashcard-controls">
+                    <button class="btn-primary" onclick="prevCard()">⬅️ Sebelumnya</button>
+                    <button class="btn-primary" onclick="nextCard()">Selanjutnya ➡️</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Mini Simulasi: Pasangkan Tradisi</h2>
+                <p>Pilih Tradisi (kiri), lalu klik Daerah asalnya (kanan)!</p>
+                <div class="sim-container">
+                    <div class="sim-items" id="drag-items">
+                        <div class="sim-item" data-id="1" onclick="selectSimItem(this)">Tradisi Bakar Batu</div>
+                        <div class="sim-item" data-id="2" onclick="selectSimItem(this)">Kebo-Keboan</div>
+                        <div class="sim-item" data-id="3" onclick="selectSimItem(this)">Mapasilaga Tedong</div>
+                    </div>
+                    <div class="sim-targets" id="drop-targets">
+                        <div class="sim-target" data-target="2" onclick="dropSimItem(this)">Banyuwangi (Jawa Timur)</div>
+                        <div class="sim-target" data-target="3" onclick="dropSimItem(this)">Toraja (Sulawesi Selatan)</div>
+                        <div class="sim-target" data-target="1" onclick="dropSimItem(this)">Jayawijaya (Papua)</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. CONTOH SOAL -->
+        <section id="contoh" class="section">
+            <div class="card">
+                <h2>Mari Pahami Contoh Soal Berikut</h2>
+                <p>Sebelum memulai kuis, pelajari 2 contoh soal tentang tradisi budaya Indonesia di bawah ini.</p>
+                
+                <div class="card contoh-card">
+                    <h3>Contoh Soal 1</h3>
+                    <p><b>Pertanyaan:</b> Sebuah upacara pengangkutan padi dari sawah ke lumbung dengan memakai rengkong (pikulan khas bambu) yang dilakukan masyarakat Sunda disebut...</p>
+                    <ul style="list-style: none;">
+                        <li>A. Bakar batu</li>
+                        <li style="color:var(--success); font-weight:bold;">B. Seren taun (Jawaban Benar)</li>
+                        <li>C. Ngaben</li>
+                        <li>D. Tedak siten</li>
+                    </ul>
+                    <div class="pembahasan">
+                        <b>Pembahasan:</b> Tradisi Seren Taun adalah tradisi rasa syukur masyarakat Sunda (Kuningan/Sukabumi) atas hasil tani dengan mengangkut padi menggunakan rengkong.
+                    </div>
+                </div>
+
+                <div class="card contoh-card">
+                    <h3>Contoh Soal 2</h3>
+                    <p><b>Pertanyaan:</b> Tradisi Mapasilaga Tedong yang merupakan acara adu kerbau berasal dari daerah...</p>
+                    <ul style="list-style: none;">
+                        <li>A. Sumba</li>
+                        <li>B. Bali</li>
+                        <li style="color:var(--success); font-weight:bold;">C. Toraja (Jawaban Benar)</li>
+                        <li>D. Papua</li>
+                    </ul>
+                    <div class="pembahasan">
+                        <b>Pembahasan:</b> Mapasilaga Tedong adalah tradisi adu kerbau dari Tana Toraja, Sulawesi Selatan, yang sering mengiringi upacara Rambu Solo.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. KUIS -->
+        <section id="kuis" class="section">
+            <div class="card" id="quiz-register">
+                <h2>Uji Pengetahuanmu! 📝</h2>
+                <p>Kerjakan 40 soal kuis berdasarkan materi yang telah dipelajari.</p>
+                <div class="quiz-setup">
+                    <input type="text" id="inputNama" placeholder="Masukkan Nama Kamu" autocomplete="off"><br>
+                    <input type="text" id="inputKelas" placeholder="Masukkan Kelas (Misal: Kelas 3)" autocomplete="off"><br>
+                    <button class="btn-primary" onclick="startQuiz()">Mulai Kuis</button>
+                </div>
+            </div>
+
+            <div class="card" id="quiz-area" style="display:none;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 15px; font-weight: bold; color: var(--text-light);">
+                    <span id="q-counter">Soal 1 / 40</span>
+                    <span id="q-scorer">Skor: 0</span>
+                </div>
+                <div class="question-box" id="question-text">Pertanyaan akan muncul di sini.</div>
+                <div class="options" id="options-area">
+                    <!-- Options generated via JS -->
+                </div>
+                <div class="quiz-footer">
+                    <span id="feedback-text" style="font-weight: bold;"></span>
+                    <button class="btn-next" id="btnNextQ" onclick="nextQuestion()">Selanjutnya ➡️</button>
+                </div>
+            </div>
+
+            <div class="card" id="quiz-result" style="display:none; text-align: center;">
+                <h2>Kuis Selesai! 🎉</h2>
+                <p>Nama: <strong id="res-nama"></strong> | Kelas: <strong id="res-kelas"></strong></p>
+                <h1 style="font-size: 4rem; color: var(--success); margin: 20px 0;" id="res-score">100</h1>
+                <p>Benar: <span id="res-benar"></span> | Salah: <span id="res-salah"></span></p>
+                <br>
+                <button class="btn-primary" onclick="showSertifikat()">Lihat Sertifikat & Grafik</button>
+                <button class="btn-primary" style="background:var(--yellow); color:var(--navy);" onclick="resetQuiz()">Ulangi Kuis</button>
+            </div>
+        </section>
+
+        <!-- 5. SERTIFIKAT & GRAFIK -->
+        <section id="sertifikat" class="section">
+            <div class="sertifikat-box">
+                <div class="sertifikat-title">SERTIFIKAT PENGHARGAAN</div>
+                <p>Diberikan Kepada:</p>
+                <h2 id="cert-nama" style="font-size: 2rem; color: var(--navy); margin: 10px 0;">[Nama Siswa]</h2>
+                <p id="cert-kelas">[Kelas]</p>
+                <p style="margin-top:20px;">Telah berhasil menyelesaikan kuis <b>Materi Tradisi Indonesia</b></p>
+                <p>dengan nilai pencapaian:</p>
+                <h1 id="cert-nilai" style="font-size: 3rem; color: var(--danger);">0</h1>
+            </div>
+
+            <div class="card">
+                <h2>📈 Grafik Perkembangan Nilai Kuis</h2>
+                <p>Melihat perkembangan belajarmu dari waktu ke waktu.</p>
+                <canvas id="scoreChart" width="800" height="300"></canvas>
+            </div>
+        </section>
+
+        <!-- 6. PENGEMBANG -->
+        <section id="pengembang" class="section">
+            <h1 style="text-align: center; margin-bottom: 30px;">Tim Pengembang</h1>
+            <div class="dev-grid">
+                <div class="dev-card">
+                    <div style="font-size: 4rem;">👩‍🏫</div>
+                    <h3>Bunda Ana</h3>
+                    <p>Desain Edukasi & Materi Pokok</p>
+                </div>
+                <div class="dev-card">
+                    <div style="font-size: 4rem;">🏡</div>
+                    <h3>GURU Di Rumah</h3>
+                    <p>Kurikulum & Metode Interaktif</p>
+                </div>
+                <div class="dev-card">
+                    <div style="font-size: 4rem;">💻</div>
+                    <h3>MEDIA PEMBELAJARAN IPAS</h3>
+                    <p>Sumatif 3 - Kelas III</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Media Pembelajaran IPAS Sumatif 3. Dibuat untuk Pendidikan Anak Bangsa.</p>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // === AUDIO ENGINE (Web Audio API) ===
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+        let bgmOscillator = null;
+        let isAudioPlaying = false;
+        let bgmGainNode = null;
+
+        function initAudio() {
+            if (!audioCtx) audioCtx = new AudioContext();
+        }
+
+        function playSound(type) {
+            initAudio();
+            if(!isAudioPlaying) return;
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            const now = audioCtx.currentTime;
+            
+            if (type === 'click') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(600, now);
+                osc.frequency.exponentialRampToValueAtTime(1000, now + 0.1);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                osc.start(now); osc.stop(now + 0.1);
+            } else if (type === 'correct') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(440, now);
+                osc.frequency.setValueAtTime(554, now + 0.1);
+                osc.frequency.setValueAtTime(659, now + 0.2);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.linearRampToValueAtTime(0, now + 0.4);
+                osc.start(now); osc.stop(now + 0.4);
+            } else if (type === 'wrong') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(200, now);
+                osc.frequency.exponentialRampToValueAtTime(100, now + 0.3);
+                gain.gain.setValueAtTime(0.3, now);
+                gain.gain.linearRampToValueAtTime(0, now + 0.3);
+                osc.start(now); osc.stop(now + 0.3);
+            } else if (type === 'success') {
+                osc.type = 'square';
+                osc.frequency.setValueAtTime(523.25, now);
+                osc.frequency.setValueAtTime(659.25, now + 0.15);
+                osc.frequency.setValueAtTime(783.99, now + 0.3);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.linearRampToValueAtTime(0, now + 0.5);
+                osc.start(now); osc.stop(now + 0.5);
+            }
+        }
+
+        function toggleAudio() {
+            initAudio();
+            isAudioPlaying = !isAudioPlaying;
+            document.getElementById('icon-sound-off').style.display = isAudioPlaying ? 'none' : 'block';
+            document.getElementById('icon-sound-on').style.display = isAudioPlaying ? 'block' : 'none';
+            
+            if (isAudioPlaying) {
+                playSound('click');
+                startBGM();
+            } else {
+                stopBGM();
+                window.speechSynthesis.cancel();
+            }
+        }
+
+        function startBGM() {
+            if(bgmOscillator) return;
+            bgmOscillator = audioCtx.createOscillator();
+            bgmGainNode = audioCtx.createGain();
+            bgmOscillator.type = 'sine';
+            bgmOscillator.frequency.value = 220; // Low hum calm
+            bgmGainNode.gain.value = 0.05; // Very soft
+            bgmOscillator.connect(bgmGainNode);
+            bgmGainNode.connect(audioCtx.destination);
+            bgmOscillator.start();
+        }
+
+        function stopBGM() {
+            if(bgmOscillator) {
+                bgmOscillator.stop();
+                bgmOscillator.disconnect();
+                bgmOscillator = null;
+            }
+        }
+
+        // Text to Speech
+        function bacaTeks(elementId) {
+            if (!isAudioPlaying) {
+                alert("Aktifkan audio (tombol speaker di kanan atas) terlebih dahulu.");
+                return;
+            }
+            window.speechSynthesis.cancel();
+            const text = document.getElementById(elementId).innerText;
+            const msg = new SpeechSynthesisUtterance(text);
+            msg.lang = 'id-ID';
+            window.speechSynthesis.speak(msg);
+        }
+
+        // === FULLSCREEN ===
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.log(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        // === NAVIGATION ===
+        function navigate(sectionId) {
+            playSound('click');
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
+            
+            document.getElementById(sectionId).classList.add('active');
+            document.getElementById('link-' + sectionId).classList.add('active');
+            
+            document.getElementById('navMenu').classList.remove('open');
+            window.scrollTo(0,0);
+            
+            if(sectionId === 'materi') updateProgress(50);
+            if(sectionId === 'sertifikat') drawChart();
+        }
+
+        // Hamburger menu
+        document.getElementById('btnMenu').addEventListener('click', () => {
+            document.getElementById('navMenu').classList.toggle('open');
+        });
+
+        // === PROGRESS & BADGE ===
+        let currentProgress = parseInt(localStorage.getItem('tradisiProgress')) || 10;
+        
+        function initDashboard() {
+            updateProgress(currentProgress);
+            checkBadges();
+        }
+
+        function updateProgress(val) {
+            if(val > currentProgress) currentProgress = val;
+            if(currentProgress > 100) currentProgress = 100;
+            localStorage.setItem('tradisiProgress', currentProgress);
+            document.getElementById('progress-bar').style.width = currentProgress + '%';
+            document.getElementById('progress-text').innerText = currentProgress + '%';
+            checkBadges();
+        }
+
+        function checkBadges() {
+            if(currentProgress >= 10) document.getElementById('badge-pemula').style.opacity = '1';
+            if(currentProgress >= 50) document.getElementById('badge-ahli').style.opacity = '1';
+            let scores = JSON.parse(localStorage.getItem('quizScores')) || [];
+            if(scores.length > 0 && scores[scores.length-1] >= 80) {
+                document.getElementById('badge-kuis').style.opacity = '1';
+            }
+        }
+
+        // === FLASHCARDS ===
+        const flashcards = [
+            { front: "Tradisi Pasola", back: "Sumba", desc: "Melempar lembing kayu dari punggung kuda." },
+            { front: "Tradisi Kebo-Keboan", back: "Banyuwangi", desc: "Menghalau wabah, berdandan kerbau membajak sawah." },
+            { front: "Upacara Ngaben", back: "Bali", desc: "Upacara adat pembakaran jenazah." },
+            { front: "Seren Taun", back: "Sunda", desc: "Syukur hasil tani, memikul padi dengan rengkong." },
+            { front: "Mapasilaga Tedong", back: "Toraja", desc: "Upacara adu kerbau." }
+        ];
+        let fcIndex = 0;
+        
+        function updateFC() {
+            document.getElementById('flashcard').classList.remove('is-flipped');
+            setTimeout(() => {
+                document.getElementById('fc-front').innerText = flashcards[fcIndex].front;
+                document.getElementById('fc-back').innerHTML = `${flashcards[fcIndex].back}<br><span style="font-size:1rem; font-weight:normal;">${flashcards[fcIndex].desc}</span>`;
+            }, 300);
+        }
+
+        function flipCard() {
+            playSound('click');
+            document.getElementById('flashcard').classList.toggle('is-flipped');
+        }
+        function nextCard() { fcIndex = (fcIndex + 1) % flashcards.length; updateFC(); playSound('click'); }
+        function prevCard() { fcIndex = (fcIndex - 1 + flashcards.length) % flashcards.length; updateFC(); playSound('click');}
+
+        // === MINI SIMULATION ===
+        let selectedSimItem = null;
+        let matchCount = 0;
+
+        function selectSimItem(el) {
+            if(el.style.opacity === '0.5') return; // already matched
+            playSound('click');
+            document.querySelectorAll('.sim-item').forEach(i => i.classList.remove('selected'));
+            el.classList.add('selected');
+            selectedSimItem = el;
+        }
+
+        function dropSimItem(target) {
+            if(!selectedSimItem) return;
+            if(target.classList.contains('matched')) return;
+
+            if(selectedSimItem.getAttribute('data-id') === target.getAttribute('data-target')) {
+                // Benar
+                playSound('success');
+                target.innerText = selectedSimItem.innerText + " (Benar!)";
+                target.classList.add('matched');
+                selectedSimItem.style.opacity = '0.5';
+                selectedSimItem.classList.remove('selected');
+                selectedSimItem = null;
+                matchCount++;
+                if(matchCount >= 3) {
+                    setTimeout(() => alert("Hebat! Kamu berhasil memasangkan semua tradisi!"), 500);
+                }
+            } else {
+                // Salah
+                playSound('wrong');
+                target.style.borderColor = 'red';
+                setTimeout(() => target.style.borderColor = 'var(--navy)', 500);
+            }
+        }
+
+        // === KUIS ENGINE (40 Soal) ===
+        const dbSoal = [
+            // 8 Soal dr Prompt
+            { q: "Tradisi pasola berasal dari daerah ....", a: ["Sumba", "Bali", "Papua", "Madura"], ans: 0 },
+            { q: "Tradisi bakar batu adalah tradisi yang dilakukan masyarakat daerah....", a: ["Sumba", "Bali", "Papua", "Madura"], ans: 2 },
+            { q: "Upacara mengangkut padi dari sawah memakai rengkong untuk rasa syukur masyarakat Sunda adalah ....", a: ["Bakar batu", "Seren taun", "Ngaben", "Tedak siten"], ans: 1 },
+            { q: "Bagian upacara adat oleh penganut agama tradisional Marapu, di Sumba Barat, antara Februari-Maret adalah ....", a: ["Seren taun", "Bakar batu", "Pasola", "Kebo-keboan"], ans: 2 },
+            { q: "Bhinneka Tunggal Ika melambangkan perbedaan suku, budaya, pulau, dan agama yang menuju ....", a: ["Persatuan dan kesatuan", "Kebinekaan", "Perpecahan", "Keteladanan"], ans: 0 },
+            { q: "Berikut ini perilaku yang mencerminkan Bhinneka Tunggal Ika, kecuali ....", a: ["Terbuka pada perbedaan", "Tidak merasa lebih baik dari yang lain", "Merasa yang paling benar", "Toleransi antar agama"], ans: 2 },
+            { q: "Fungsi Bhinneka Tunggal Ika dalam kehidupan berbangsa dan bermasyarakat, yaitu ....", a: ["Hanya sebagai semboyan", "Membangun kehidupan yang toleran & kesatuan", "Menciptakan persaingan", "Menciptakan pertikaian"], ans: 1 },
+            { q: "Pakaian adat khas Kepulauan Riau adalah...", a: ["Ulos", "Kebaya", "Teluk Belanga", "Pesa'an"], ans: 2 },
+            
+            // Generate sisa 32 soal dr materi
+            { q: "Kebiasaan atau adat istiadat yang dijalankan secara turun-temurun disebut...", a: ["Hukum", "Tradisi", "Peraturan", "Sanksi"], ans: 1 },
+            { q: "Upacara potong gigi merupakan adat istiadat yang dilakukan oleh masyarakat di...", a: ["Jawa", "Bali", "Lombok", "Papua"], ans: 1 },
+            { q: "Tradisi bau nyale adalah tradisi yang berasal dari daerah...", a: ["Jawa", "Bali", "Lombok", "Papua"], ans: 2 },
+            { q: "Tradisi seren taun banyak dijumpai di daerah Kuningan dan...", a: ["Sukabumi", "Bandung", "Bogor", "Garut"], ans: 0 },
+            { q: "Alat pikulan khas dari bambu yang digunakan pada tradisi seren taun disebut...", a: ["Cangkul", "Rengkong", "Tampah", "Lesung"], ans: 1 },
+            { q: "Tradisi yang meliputi ekspresi seni, bahasa, musik, dan tarian disebut tradisi...", a: ["Agama", "Budaya", "Sosial", "Keluarga"], ans: 1 },
+            { q: "Perayaan ulang tahun merupakan contoh dari tradisi...", a: ["Agama", "Budaya", "Sosial", "Keluarga"], ans: 3 },
+            { q: "Salah satu ciri tradisi tidak tertulis adalah...", a: ["Terdokumentasi", "Sumber jelas", "Disampaikan lisan", "Konsisten karena ada aturan"], ans: 2 },
+            { q: "Ciri dari tradisi tertulis adalah...", a: ["Mudah berubah", "Bergantung pengalaman leluhur secara lisan", "Memiliki kejelasan aturan tertulis", "Sangat fleksibel"], ans: 2 },
+            { q: "Jumlah suku bangsa di Indonesia diperkirakan sebanyak...", a: ["340 suku", "740 suku", "1.340 suku", "2.340 suku"], ans: 2 },
+            { q: "Suku Batak berasal dari provinsi...", a: ["Sumatera Utara", "Jawa Timur", "DKI Jakarta", "Kalimantan"], ans: 0 },
+            { q: "Suku Betawi adalah penduduk asli wilayah...", a: ["Jawa Tengah", "Jawa Barat", "DKI Jakarta", "Banten"], ans: 2 },
+            { q: "Pakaian adat Baju Pangsi berasal dari daerah...", a: ["Banten", "Maluku", "Sulawesi Selatan", "Jawa Timur"], ans: 0 },
+            { q: "Pakaian adat Pesa'an berasal dari provinsi...", a: ["Bali", "Jawa Timur", "Maluku", "Riau"], ans: 1 },
+            { q: "Baju Bodo merupakan pakaian adat dari...", a: ["Kepulauan Riau", "Sulawesi Selatan", "Sumatera Barat", "Papua"], ans: 1 },
+            { q: "Makanan khas daerah pendap berasal dari...", a: ["Bangka Belitung", "Bengkulu", "Jawa Barat", "Banten"], ans: 1 },
+            { q: "Karedok adalah makanan khas dari daerah...", a: ["Bali", "Banten", "Jawa Barat", "Sumatera Utara"], ans: 2 },
+            { q: "Ayam betutu adalah hidangan khas dari provinsi...", a: ["Jawa Timur", "Bali", "Bengkulu", "Kalimantan"], ans: 1 },
+            { q: "Alat musik angklung berasal dari...", a: ["Jawa Tengah", "Bali", "Jawa Barat", "Bengkulu"], ans: 2 },
+            { q: "Tari Gambyong adalah kesenian tari dari daerah...", a: ["Jawa Timur", "Jawa Tengah", "Jawa Barat", "Bali"], ans: 1 },
+            { q: "Senjata tradisional kerambit berasal dari daerah...", a: ["Banten", "Bengkulu", "DKI Jakarta", "Maluku"], ans: 1 },
+            { q: "Bahasa Sunda umumnya digunakan oleh suku...", a: ["Betawi", "Jawa", "Sunda", "Batak"], ans: 2 },
+            { q: "Tradisi kebo-keboan dilakukan oleh masyarakat dari suku...", a: ["Baduy", "Tengger", "Osing", "Asmat"], ans: 2 },
+            { q: "Tradisi kebo-keboan di Banyuwangi bertujuan untuk...", a: ["Merayakan panen", "Menghalau wabah penyakit", "Adu kekuatan", "Menyambut tahun baru"], ans: 1 },
+            { q: "Dalam tradisi Bakar Batu, bahan makanan diletakkan dan ditutup dengan...", a: ["Batu biasa", "Daun pisang saja", "Batu panas", "Kayu bakar"], ans: 2 },
+            { q: "Rambu Solo merupakan upacara kematian yang diwarisi oleh masyarakat...", a: ["Toraja", "Osing", "Sunda", "Dayak"], ans: 0 },
+            { q: "Makam di tebing goa pada upacara Rambu Solo disebut...", a: ["Ngaben", "Sarkofagus", "Londa", "Candi"], ans: 2 },
+            { q: "Acara adu kerbau dalam adat Toraja dikenal dengan nama...", a: ["Pasola", "Kebo-keboan", "Mapasilaga Tedong", "Ma'tinggoro Tedong"], ans: 2 },
+            { q: "Tradisi saling tolong menolong menanam dan memanen padi pada masyarakat Mandailing disebut...", a: ["Sekaten", "Melasti", "Marsialapari", "Seren Taun"], ans: 2 },
+            { q: "Tradisi Sekaten di Yogyakarta dan Surakarta digelar untuk memperingati...", a: ["Hari Pahlawan", "Maulid Nabi Muhammad Saw", "Tahun Baru Islam", "Kemerdekaan"], ans: 1 },
+            { q: "Tradisi Melasti dilakukan oleh masyarakat Bali menjelang hari raya...", a: ["Nyepi", "Galungan", "Kuningan", "Waisak"], ans: 0 },
+            { q: "Tujuan dari ritual Melasti adalah untuk...", a: ["Membajak sawah", "Menyucikan diri di sumber mata air", "Adu ketangkasan", "Memasak bersama"], ans: 1 }
+        ];
+
+        let quizData = [];
+        let currQIndex = 0;
+        let score = 0;
+        let studentName = "";
+        let studentClass = "";
+        let historyQuiz = JSON.parse(localStorage.getItem('quizScores')) || [];
+
+        function startQuiz() {
+            studentName = document.getElementById('inputNama').value.trim();
+            studentClass = document.getElementById('inputKelas').value.trim();
+            if(studentName === "" || studentClass === "") {
+                alert("Silakan isi nama dan kelas terlebih dahulu!");
+                return;
+            }
+            playSound('click');
+            // Shuffle array 
+            quizData = [...dbSoal]; 
+            // Acak pilihan gandanya saja (Fisher-Yates) 
+            quizData.forEach(q => {
+                let correctAnswerText = q.a[q.ans];
+                // Acak opsi
+                for(let i=q.a.length-1; i>0; i--) {
+                    const j = Math.floor(Math.random()*(i+1));
+                    [q.a[i], q.a[j]] = [q.a[j], q.a[i]];
+                }
+                // Update ans index
+                q.ans = q.a.indexOf(correctAnswerText);
+            });
+
+            currQIndex = 0;
+            score = 0;
+            document.getElementById('quiz-register').style.display = 'none';
+            document.getElementById('quiz-result').style.display = 'none';
+            document.getElementById('quiz-area').style.display = 'block';
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            document.getElementById('btnNextQ').style.display = 'none';
+            document.getElementById('feedback-text').innerText = '';
+            
+            const qObj = quizData[currQIndex];
+            document.getElementById('q-counter').innerText = `Soal ${currQIndex + 1} / 40`;
+            document.getElementById('q-scorer').innerText = `Skor: ${score}`;
+            document.getElementById('question-text').innerText = qObj.q;
+
+            const optArea = document.getElementById('options-area');
+            optArea.innerHTML = '';
+            const labels = ['A', 'B', 'C', 'D'];
+            
+            qObj.a.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = `${labels[index]}. ${opt}`;
+                btn.onclick = () => checkAnswer(index, btn);
+                optArea.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, btnElement) {
+            // Disable all buttons
+            const btns = document.querySelectorAll('.option-btn');
+            btns.forEach(b => b.onclick = null);
+
+            const correctIndex = quizData[currQIndex].ans;
+            
+            if(selectedIndex === correctIndex) {
+                playSound('correct');
+                btnElement.classList.add('correct');
+                document.getElementById('feedback-text').innerText = "Tepat Sekali! 🌟";
+                document.getElementById('feedback-text').style.color = "var(--success)";
+                score += 2.5; // 40 soal * 2.5 = 100
+            } else {
+                playSound('wrong');
+                btnElement.classList.add('wrong');
+                btns[correctIndex].classList.add('correct'); // Tunjukkan yg benar
+                document.getElementById('feedback-text').innerText = "Yah, kurang tepat. 😢";
+                document.getElementById('feedback-text').style.color = "var(--danger)";
+            }
+
+            document.getElementById('btnNextQ').style.display = 'block';
+        }
+
+        function nextQuestion() {
+            playSound('click');
+            currQIndex++;
+            if(currQIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            document.getElementById('quiz-area').style.display = 'none';
+            document.getElementById('quiz-result').style.display = 'block';
+            playSound('success');
+
+            const finalScore = Math.round(score);
+            const benar = finalScore / 2.5;
+            const salah = 40 - benar;
+
+            document.getElementById('res-nama').innerText = studentName;
+            document.getElementById('res-kelas').innerText = studentClass;
+            document.getElementById('res-score').innerText = finalScore;
+            document.getElementById('res-benar').innerText = benar;
+            document.getElementById('res-salah').innerText = salah;
+
+            // Save history
+            historyQuiz.push(finalScore);
+            localStorage.setItem('quizScores', JSON.stringify(historyQuiz));
+            updateProgress(100); // 100% krn sudah kerjain kuis
+        }
+
+        function showSertifikat() {
+            navigate('sertifikat');
+            document.getElementById('cert-nama').innerText = studentName || "Siswa Teladan";
+            document.getElementById('cert-kelas').innerText = studentClass || "-";
+            document.getElementById('cert-nilai').innerText = Math.round(score) || 0;
+            drawChart();
+        }
+
+        function resetQuiz() {
+            document.getElementById('quiz-result').style.display = 'none';
+            document.getElementById('quiz-register').style.display = 'block';
+            document.getElementById('inputNama').value = studentName;
+            document.getElementById('inputKelas').value = studentClass;
+        }
+
+        // === GRAFIK PENCAPAIAN (Canvas API Native) ===
+        function drawChart() {
+            const canvas = document.getElementById('scoreChart');
+            if(!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const W = canvas.width;
+            const H = canvas.height;
+            const padding = 40;
+
+            ctx.clearRect(0,0,W,H);
+            
+            let data = JSON.parse(localStorage.getItem('quizScores')) || [];
+            if(data.length === 0) {
+                ctx.font = "20px Arial";
+                ctx.fillStyle = "#999";
+                ctx.textAlign = "center";
+                ctx.fillText("Belum ada data kuis. Ayo kerjakan kuisnya!", W/2, H/2);
+                return;
+            }
+
+            // Batasi 10 data terakhir
+            if(data.length > 10) data = data.slice(-10);
+
+            // Draw Grid & Axes
+            ctx.beginPath();
+            ctx.strokeStyle = "#ddd";
+            ctx.lineWidth = 1;
+            ctx.font = "12px Arial";
+            ctx.fillStyle = "#666";
+            ctx.textAlign = "right";
+
+            // Y Axis (0-100)
+            for(let i=0; i<=5; i++) {
+                let y = H - padding - (i/5)*(H - 2*padding);
+                ctx.moveTo(padding, y);
+                ctx.lineTo(W-padding, y);
+                ctx.fillText(i*20, padding-10, y+4);
+            }
+            ctx.stroke();
+
+            // X Axis & Line
+            const stepX = (W - 2*padding) / Math.max(1, (data.length - 1));
+            
+            ctx.beginPath();
+            ctx.strokeStyle = "var(--navy)";
+            ctx.lineWidth = 3;
+            
+            data.forEach((val, index) => {
+                let x = padding + index * stepX;
+                let y = H - padding - (val/100)*(H - 2*padding);
+                
+                if(index === 0) ctx.moveTo(x,y);
+                else ctx.lineTo(x,y);
+            });
+            ctx.stroke();
+
+            // Draw Points
+            ctx.fillStyle = "var(--yellow)";
+            data.forEach((val, index) => {
+                let x = padding + index * stepX;
+                let y = H - padding - (val/100)*(H - 2*padding);
+                ctx.beginPath();
+                ctx.arc(x, y, 6, 0, Math.PI*2);
+                ctx.fill();
+                ctx.stroke();
+                
+                // Label percobaan
+                ctx.fillStyle = "#666";
+                ctx.textAlign = "center";
+                ctx.fillText("Ke-"+(index+1), x, H - padding + 20);
+                ctx.fillStyle = "var(--yellow)";
+            });
+        }
+
+        // Initialize on load
+        window.onload = () => {
+            initDashboard();
+            updateFC();
+        }
+    </script>
+</body>
+</html>
